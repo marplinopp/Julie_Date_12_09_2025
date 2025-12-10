@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title> Julie's Finals Eat Out </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at top, #1f89b3, #74dbd6, #496497);
+            color: #333;
+        }
+
+        .card {
+            background: #ffffffee;
+            padding: 2rem 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            max-width: 580px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.7rem;
+            margin-bottom: 0.75rem;
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .gifs img {
+            border-radius: 25px;
+            width: 75%;
+            height: 75%;
+            margin-bottom: 5%;
+        }
+
+        input[type="password"],
+        textarea {
+            width: 100%;
+            border-radius: 0.75rem;
+            border: 1px solid #ddd;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.2s, box-shadow 0.2s;
+            resize: vertical;
+        }
+
+        input[type="password"]:focus,
+        textarea:focus {
+            border-color: #6495ed;
+            box-shadow: 0 0 0 3px #27b8bd;
+        }
+
+        button {
+            margin-top: 1rem;
+            width: 100%;
+            padding: 0.85rem 1.25rem;
+            border-radius: 999px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: linear-gradient(135deg, #6495ed, #75abdd);
+            color: white;
+            box-shadow: 0 6px 15px #75abdd;
+            transition: transform 0.1s ease, box-shadow 0.1s ease,
+                filter 0.15s ease;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.05);
+            box-shadow: 0 6px 15px #75abdd;
+        }
+
+        button:active {
+            transform: translateY(1px);
+            box-shadow: 0 8px 18px #75abdd;
+        }
+
+        .error {
+            color: #d90429;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            min-height: 1.2em;
+        }
+
+        #main-content {
+            display: none;
+        }
+
+        .small {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            margin-top: 0.75rem;
+        }
+    </style>
+</head>
+
+<audio id="bg-music" loop>
+    <source src="assets/cygnus-garden.mp3" type="audio/mp3">
+</audio>
+
+<body>
+
+    <!-- Password screen -->
+    <div id="lock-screen" class="card">
+        <div class="gifs">
+            <img src="assets/totoro-jumping.gif"></img>
+        </div>
+        <h2>Hi Beautiful, there's something I want to ask</h2>
+        <p>Enter the password to get in >:) </p>
+        <input type="password" id="password-input" placeholder="What's our anniversary? (e.g., 01-31-2049)" />
+        <button onclick="checkPassword()">Press me button</button>
+        <div id="password-error" class="error"></div>
+        <p class="small">(Are you coming in?)</p>
+    </div>
+
+    <!-- Main content -->
+    <div id="main-content" class="card">
+        <div class="gifs">
+            <img src="assets/jiji-eating.gif"> </img>
+        </div>
+        <h2>It's a stressful period for you...</h2>
+        
+        <p style="font-weight: 600; font-size: 1.1rem; margin-bottom: 1.2rem;">
+            ...so pick any activities and places to eat at and we'll go &lt3
+        </p>
+
+        <textarea id="response-text" rows="6" placeholder="Type your response here :)"></textarea>
+
+        <button onclick="sendEmail()">Send me your answer</button>
+        <div id="form-error" class="error"></div>
+
+        <p class="small">
+            This should open your email app with your answer filled in lol. <br>
+            <i>BGM from Maplestory: Cygnus Garden</i>
+        </p>
+    </div>
+
+    <script>
+        const CORRECT_PASSWORD = "05-22-2025"; // <-- set your own password
+        const YOUR_EMAIL = "mrtn.Pineda@gmail.com";     // <-- put your email here
+        const currentDate = new Date();
+        const dateNow = currentDate.getDate()+'-'+(currentDate.getMonth()+1)+'-'+currentDate.getFullYear()
+        const EMAIL_SUBJECT = "Julie's answer to date on " + dateNow;
+        
+
+        function checkPassword() {
+            const input = document.getElementById("password-input").value.trim();
+            const error = document.getElementById("password-error");
+
+            if (input === CORRECT_PASSWORD) {
+                error.textContent = "";
+                document.getElementById("lock-screen").style.display = "none";
+                document.getElementById("main-content").style.display = "block";
+
+                // Play music
+                const music = document.getElementById("bg-music");
+                music.volume = 1.0;
+                music.play();
+            } else {
+                error.textContent = "Try again. Enter in mm-dd-yyyy format!";
+            }
+        }
+
+        function sendEmail() {
+            const textArea = document.getElementById("response-text");
+            const message = textArea.value.trim();
+            const error = document.getElementById("form-error");
+
+            if (!message) {
+                error.textContent = "Type something first >:(";
+                return;
+            }
+
+            error.textContent = "";
+
+            const body = encodeURIComponent(
+                "To Martin,\n\n" + message
+            );
+
+            // This will open their email client with everything filled in
+            const mailtoLink =
+                "mailto:" +
+                encodeURIComponent(YOUR_EMAIL) +
+                "?subject=" +
+                encodeURIComponent(EMAIL_SUBJECT) +
+                "&body=" +
+                body;
+
+            window.location.href = mailtoLink;
+        }
+
+        // Allow Enter key to submit password
+        document
+            .getElementById("password-input")
+            .addEventListener("keydown", function (e) {
+                if (e.key === "Enter") {
+                    checkPassword();
+                }
+            });
+    </script>
+</body>
+
+</html>
